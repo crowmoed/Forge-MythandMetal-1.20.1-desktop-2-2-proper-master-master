@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "north": "mythandmetal:block/ashenlogside1",
+    "south": "mythandmetal:block/ashenlogside1",
+    "east": "mythandmetal:block/ashenlogside1",
+    "west": "mythandmetal:block/ashenlogside1",
+    "up": "mythandmetal:block/ashenlog",
+    "down": "mythandmetal:block/ashenlog"
+  }
+}

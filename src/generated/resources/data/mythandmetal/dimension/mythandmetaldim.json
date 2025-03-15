@@ -1,0 +1,50 @@
+{
+  "type": "mythandmetal:mythandmetal_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "mythandmetal:ash_forest",
+          "parameters": {
+            "continentalness": 1.0,
+            "depth": 0.1,
+            "erosion": 0.0,
+            "humidity": 0.0,
+            "offset": 0.0,
+            "temperature": 0.0,
+            "weirdness": 0.0
+          }
+        },
+        {
+          "biome": "mythandmetal:enchanted_forest",
+          "parameters": {
+            "continentalness": 1.0,
+            "depth": 0.1,
+            "erosion": 0.0,
+            "humidity": 0.2,
+            "offset": 0.0,
+            "temperature": 0.1,
+            "weirdness": 0.0
+          }
+        },
+        {
+          "biome": "mythandmetal:metalplains",
+          "parameters": {
+            "temperature": 0.5,
+            "humidity": 0.5,
+            "continentalness": 1.0,
+            "erosion": 0.0,
+            "depth": 0.0,
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        }
+      ]
+    },
+    "settings": "mythandmetal:custom_land_settings",
+    "seed": -1
+
+  }
+}

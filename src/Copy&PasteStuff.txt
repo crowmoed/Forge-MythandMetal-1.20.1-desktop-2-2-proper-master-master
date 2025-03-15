@@ -1,0 +1,6 @@
+"seed": "-1",
+    "surface_rule": "mythandmetal:modcustom_surface_rule"
+
+
+/plotStandard 1 -2 1
+/plotVertex 1 2 3 -10 10

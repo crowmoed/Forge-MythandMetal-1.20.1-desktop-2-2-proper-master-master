@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "net.pinto.mythandmetal.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ArmorRendererMixin",
+    "ItemRendererMixin",
+    "ItemStackMixin",
+    "PlayerMixin",
+    "renderBufferInterface",
+    "RenderBuffersMixin"
+  ],
+  "client":[
+],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

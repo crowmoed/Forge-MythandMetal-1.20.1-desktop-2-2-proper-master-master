@@ -1,0 +1,35 @@
+{
+  "block.mythandmetal.enchanted_dirt": "Enchanted Dirt",
+  "block.mythandmetal.ash_grass": "Ash Grass",
+  "item.mythandmetal.explosive_sword": "Explosive Sword",
+  "block.mythandmetal.ash_log": "Ash Log",
+  "block.mythandmetal.ash_leaves": "Ash Leaves",
+  "block.mythandmetal.ash_sapling": "Ash sapling",
+
+  "creativetab.mythandmetalcrtab": "Myth & Metal",
+
+
+  "item.mythandmetal.upgrade_ingot_2": "III Mythril",
+  "item.mythandmetal.upgrade_ingot_1": "II Mythril",
+  "item.mythandmetal.upgrade_ingot_3": "IV Mythril",
+  "item.mythandmetal.upgrade_ingot_4": "V Mythril",
+  "item.mythandmetal.upgrade_ingot_5": "VI Mythril",
+  "item.mythandmetal.upgrade_ingot_6": "VII Mythril",
+
+  "item.mythandmetal.upgrade_ingotshard_2": "III Shard",
+  "item.mythandmetal.upgrade_ingotshard_1": "II Shard",
+  "item.mythandmetal.upgrade_ingotshard_3": "IV Shard",
+  "item.mythandmetal.upgrade_ingotshard_4": "V Shard",
+  "item.mythandmetal.upgrade_ingotshard_5": "VI Shard",
+  "item.mythandmetal.upgrade_ingotshard_6": "VII Shard",
+
+  "block.mythandmetal.mythril_ore_t2": "II Mythril Ore",
+  "block.mythandmetal.mythril_ore_t3": "III Mythril Ore",
+  "block.mythandmetal.mythril_ore_t4": "IV Mythril Ore",
+  "block.mythandmetal.mythril_ore_t5": "V Mythril Ore",
+  "block.mythandmetal.mythril_ore_t6": "VI Mythril Ore",
+  "block.mythandmetal.mythril_ore_t7": "VII Mythril Ore",
+
+
+  "entity.minecraft.villager.mythandmetal.mythriltrader": "Mythril Trader "
+}

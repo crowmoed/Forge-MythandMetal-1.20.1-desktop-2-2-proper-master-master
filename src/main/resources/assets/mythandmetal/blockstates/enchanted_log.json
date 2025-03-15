@@ -1,0 +1,17 @@
+
+{
+  "variants": {
+    "axis=x": {
+      "model": "mythandmetal:block/enchanted_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "mythandmetal:block/enchanted_log"
+    },
+    "axis=z": {
+      "model": "mythandmetal:block/enchanted_log",
+      "x": 90
+    }
+  }
+}

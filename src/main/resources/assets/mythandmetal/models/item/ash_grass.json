@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "north": "mythandmetal:block/ashgrass_side",
+    "south": "mythandmetal:block/ashgrass_side",
+    "east": "mythandmetal:block/ashgrass_side",
+    "west": "mythandmetal:block/ashgrass_side",
+    "up": "mythandmetal:block/ashgrass_top",
+    "down": "mythandmetal:block/ashgrass_bot"
+  }
+}

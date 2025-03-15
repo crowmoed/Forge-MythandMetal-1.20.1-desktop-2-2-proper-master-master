@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",  "category": "misc",
+
+  "key": {
+    "#": {
+      "item": "mythandmetal:upgrade_ingotshard_6"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "item": "mythandmetal:upgrade_ingot_6",
+    "count": 1
+  },
+  "show_notification": true
+}

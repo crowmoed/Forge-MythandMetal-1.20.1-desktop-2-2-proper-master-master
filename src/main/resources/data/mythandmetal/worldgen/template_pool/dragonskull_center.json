@@ -1,0 +1,13 @@
+{
+	"name": "mythandmetal:dragonskull_center",
+	"fallback": "minecraft:empty",
+	"elements": [{
+		"weight": 1,
+		"element": {
+			"location": "mythandmetal:modstructures/dragonskull",
+			"processors": "minecraft:empty",
+			"projection": "rigid",
+			"element_type": "minecraft:single_pool_element"
+		}
+	}]
+}
