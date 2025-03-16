@@ -60,6 +60,7 @@ public class ModCreativeModeTabs {
 
 
 
+                        output.accept(ModBlocks.LAVA_MOD_PORTAL.get());
 
 
                         output.accept(ModBlocks.MOD_PORTAL.get());

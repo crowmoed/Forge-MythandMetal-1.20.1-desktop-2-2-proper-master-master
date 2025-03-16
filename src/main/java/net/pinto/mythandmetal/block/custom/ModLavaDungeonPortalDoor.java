@@ -4,12 +4,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.ResourceLocationException;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.SectionPos;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -22,28 +17,26 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.phys.BlockHitResult;
-import net.pinto.mythandmetal.MythandMetal;
 import net.pinto.mythandmetal.block.SavePortalData;
 import net.pinto.mythandmetal.worldgen.dimension.ModDimensions;
 
 import java.util.Optional;
 
 
-public class ModPortalBlock extends Block {
+public class ModLavaDungeonPortalDoor extends Block {
 
-    public ModPortalBlock(Properties pProperties) {
+    public ModLavaDungeonPortalDoor(Properties pProperties) {
         super(pProperties);
     }
 
@@ -70,9 +63,9 @@ public class ModPortalBlock extends Block {
             MinecraftServer minecraftServer = currentLevel.getServer();
             SavePortalData data = SavePortalData.get(currentLevel);
 
-            ResourceKey<Level> targetDimensionKey = player.level().dimension() == ModDimensions.MYTHANDMETAL_LEVEL_KEY
+            ResourceKey<Level> targetDimensionKey = player.level().dimension() == ModDimensions.LAVADUNGEON_LEVEL_KEY
                     ? Level.OVERWORLD
-                    : ModDimensions.MYTHANDMETAL_LEVEL_KEY;
+                    : ModDimensions.LAVADUNGEON_LEVEL_KEY;
 
             ServerLevel targetDimension = minecraftServer.getLevel(targetDimensionKey);
 
@@ -80,7 +73,7 @@ public class ModPortalBlock extends Block {
                 serverPlayer.changeDimension(targetDimension);
 
                 BlockPos targetPortalPos;
-                if (targetDimensionKey == ModDimensions.MYTHANDMETAL_LEVEL_KEY) {
+                if (targetDimensionKey == ModDimensions.LAVADUNGEON_LEVEL_KEY) {
                     targetPortalPos = new BlockPos(0, portalBlockPos.getY(), 0); // Fixed position in the modded dimension
                     serverPlayer.getPersistentData().putIntArray("portalPosition", new int[]{portalBlockPos.getX(), portalBlockPos.getY(), portalBlockPos.getZ()});
                     targetPortalPos = ensureSafePortalLocation(targetDimension, targetPortalPos);
@@ -91,7 +84,7 @@ public class ModPortalBlock extends Block {
                     data.setMyVariable(1);
                     serverPlayer.teleportTo(
                             targetDimension,
-                            targetPortalPos.getX() + 0.5, // Center the player on the block
+                            targetPortalPos.getX() + 0.5,
                             targetPortalPos.getY()+1,
                             targetPortalPos.getZ() + 0.5,
                             player.getYRot(),
@@ -101,7 +94,7 @@ public class ModPortalBlock extends Block {
                     targetPortalPos = new BlockPos(savedPortalPos[0]+1, savedPortalPos[1], savedPortalPos[2]);
                     serverPlayer.teleportTo(
                             targetDimension,
-                            targetPortalPos.getX() + 0.5, // Center the player on the block
+                            targetPortalPos.getX() + 0.5,
                             targetPortalPos.getY()+1,
                             targetPortalPos.getZ() + 0.5,
                             player.getYRot(),
