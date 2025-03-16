@@ -121,8 +121,8 @@ public class ModDimensions {
 
 
         NoiseBasedChunkGenerator lavawrappedChunkGenerator = new NoiseBasedChunkGenerator(
-                new FixedBiomeSource(biomeRegistry.getOrThrow(ModBiomes.ASH_FOREST)),
-                noiseGenSettings.getOrThrow(NoiseGeneratorSettings.END));
+                new FixedBiomeSource(biomeRegistry.getOrThrow(ModBiomes.DUNGEON)),
+                noiseGenSettings.getOrThrow(NoiseGeneratorSettings.OVERWORLD));
 
         LevelStem lavastem = new LevelStem(dimTypes.getOrThrow(ModDimensions.LAVADUNGEON_DIM_TYPE), lavawrappedChunkGenerator);
 

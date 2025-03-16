@@ -1,9 +1,10 @@
-// 1.20.1	2025-03-16T04:15:54.2459291	Registries
-f72189457e47cd76ebd9e9a415e4487532bd976e data/mythandmetal/dimension/lavadungeondim.json
+// 1.20.1	2025-03-16T04:47:39.0834701	Registries
+c2319a3d58cb06c6d476c0f78cd0588621f1bd7d data/mythandmetal/dimension/lavadungeondim.json
 0499d16a7c688cbf34e1bd04dac92412aaa61542 data/mythandmetal/dimension/mythandmetaldim.json
 ce033a6455d61287d4c8bb49272629d0c53f3c3b data/mythandmetal/dimension_type/lavadungeon_type.json
 648feccf995d4555ba53d4b2fc5151e90d6f90d2 data/mythandmetal/dimension_type/mythandmetal_type.json
 debc055f63ce461432fa339ebc220ecf4c2ba624 data/mythandmetal/worldgen/biome/ash_forest.json
+06ea1ef53e3a559a81376db268fce43a3d3e8934 data/mythandmetal/worldgen/biome/dungeon.json
 e0d9de6c0cdad8b3b578023af54f77f1c364952d data/mythandmetal/worldgen/biome/enchanted_forest.json
 0071f60ed5214a02ae0a9bea3f8f0cf023d671af data/mythandmetal/worldgen/biome/metalplains.json
 c6d1ff9105db6fd54c23cf5ce0fe04a5a249ba19 data/mythandmetal/worldgen/configured_feature/ash_tree.json

@@ -14,6 +14,7 @@ public class ModBiomes {
     public  static final ResourceKey<Biome> ASH_FOREST = register("ash_forest");
     public  static final ResourceKey<Biome> ENCHANTED_FOREST = register("enchanted_forest");
     public  static final ResourceKey<Biome> METALPLAINS = register("metalplains");
+    public  static final ResourceKey<Biome> DUNGEON = register("dungeon");
 
 
     private static ResourceKey<Biome> register(String name)
@@ -25,6 +26,7 @@ public class ModBiomes {
         context.register(ASH_FOREST, ash_forest(context));
         context.register(ENCHANTED_FOREST, enchanted_forest(context));
         context.register(METALPLAINS, metalplains(context));
+        context.register(DUNGEON, dungeon(context));
 
     }
 
@@ -33,6 +35,35 @@ public class ModBiomes {
         BiomeDefaultFeatures.addDefaultMonsterRoom(builder);
         BiomeDefaultFeatures.addDefaultUndergroundVariety(builder);
     }
+
+    public static Biome dungeon(BootstapContext<Biome> context) {
+        MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
+
+
+
+        BiomeGenerationSettings.Builder biomeBuilder = new BiomeGenerationSettings.Builder(context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER));
+
+
+
+
+        return new Biome.BiomeBuilder()
+                .hasPrecipitation(false)
+                .downfall(0.0f)
+                .temperature(0.0f)
+                .generationSettings(biomeBuilder.build())
+                .mobSpawnSettings(spawnBuilder.build())
+                .specialEffects((new BiomeSpecialEffects.Builder())
+                        .waterColor(0x00000)
+                        .waterFogColor(0x00000)
+                        .skyColor(0x00000)
+                        .grassColorOverride(0xBABABA)
+                        .foliageColorOverride(0xBABABA)
+                        .fogColor(0x00000)
+                        .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
+                        .build())
+                .build();
+    }
+
 
     public static Biome enchanted_forest(BootstapContext<Biome> context) {
         MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
