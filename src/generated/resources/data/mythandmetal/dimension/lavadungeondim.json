@@ -1,0 +1,11 @@
+{
+  "type": "mythandmetal:lavadungeon_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "mythandmetal:ash_forest"
+    },
+    "settings": "mythandmetal:custom_dungeon_settings"
+  }
+}
