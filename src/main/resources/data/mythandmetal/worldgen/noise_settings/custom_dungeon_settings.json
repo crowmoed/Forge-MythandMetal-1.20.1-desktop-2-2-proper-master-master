@@ -9,10 +9,10 @@
   "disable_mob_generation": true,
   "legacy_random_source": true,
   "noise": {
-    "height": 512,
-    "min_y": -512,
+    "height": 0,
+    "min_y": 0,
     "size_horizontal": 1,
-    "size_vertical": 1
+    "size_vertical": 2
   },
   "noise_router": {
     "barrier": 0.0,
