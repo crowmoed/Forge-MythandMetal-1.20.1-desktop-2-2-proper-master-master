@@ -70,9 +70,9 @@ public class ModPortalBlock extends Block {
             MinecraftServer minecraftServer = currentLevel.getServer();
             SavePortalData data = SavePortalData.get(currentLevel);
 
-            ResourceKey<Level> targetDimensionKey = player.level().dimension() == ModDimensions.MYTHANDMETAL_LEVEL_KEY
+            ResourceKey<Level> targetDimensionKey = player.level().dimension() == ModDimensions.LAVADUNGEON_LEVEL_KEY
                     ? Level.OVERWORLD
-                    : ModDimensions.MYTHANDMETAL_LEVEL_KEY;
+                    : ModDimensions.LAVADUNGEON_LEVEL_KEY;
 
             ServerLevel targetDimension = minecraftServer.getLevel(targetDimensionKey);
 
@@ -80,7 +80,7 @@ public class ModPortalBlock extends Block {
                 serverPlayer.changeDimension(targetDimension);
 
                 BlockPos targetPortalPos;
-                if (targetDimensionKey == ModDimensions.MYTHANDMETAL_LEVEL_KEY) {
+                if (targetDimensionKey == ModDimensions.LAVADUNGEON_LEVEL_KEY) {
                     targetPortalPos = new BlockPos(0, portalBlockPos.getY(), 0); // Fixed position in the modded dimension
                     serverPlayer.getPersistentData().putIntArray("portalPosition", new int[]{portalBlockPos.getX(), portalBlockPos.getY(), portalBlockPos.getZ()});
                     targetPortalPos = ensureSafePortalLocation(targetDimension, targetPortalPos);
@@ -91,7 +91,7 @@ public class ModPortalBlock extends Block {
                     data.setMyVariable(1);
                     serverPlayer.teleportTo(
                             targetDimension,
-                            targetPortalPos.getX() + 0.5, // Center the player on the block
+                            targetPortalPos.getX() + 0.5,
                             targetPortalPos.getY()+1,
                             targetPortalPos.getZ() + 0.5,
                             player.getYRot(),
@@ -101,7 +101,7 @@ public class ModPortalBlock extends Block {
                     targetPortalPos = new BlockPos(savedPortalPos[0]+1, savedPortalPos[1], savedPortalPos[2]);
                     serverPlayer.teleportTo(
                             targetDimension,
-                            targetPortalPos.getX() + 0.5, // Center the player on the block
+                            targetPortalPos.getX() + 0.5,
                             targetPortalPos.getY()+1,
                             targetPortalPos.getZ() + 0.5,
                             player.getYRot(),
@@ -116,26 +116,20 @@ public class ModPortalBlock extends Block {
 
 
     private BlockPos ensureSafePortalLocation(ServerLevel targetDimension, BlockPos portalPos) {
-        // Create a mutable copy of the portal position, starting at Y=255
-        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(portalPos.getX(), 255, portalPos.getZ());
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(portalPos.getX(), 512, portalPos.getZ());
 
-        // Iterate downwards from Y=255 to Y=0
         while (mutablePos.getY() >= 0) {
-            // Check if the current block is a GrassBlock
             if ((targetDimension.getBlockState(mutablePos).getBlock() instanceof Block)&& (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.AIR)&& (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.VOID_AIR&& (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.CAVE_AIR))) {
 
                 BlockPos abovePos = mutablePos.above();
                 if (targetDimension.getBlockState(abovePos).isAir()) {
-                    // Return the position above the GrassBlock (safe for portal placement)
                     return abovePos;
                 }
             }
-            // Move down by 1 block
             mutablePos.move(0, -1, 0);
         }
         mutablePos.move(0, 1, 0);
 
-        // If no valid position is found, return the original position (or handle the error)
         return mutablePos;
     }
 

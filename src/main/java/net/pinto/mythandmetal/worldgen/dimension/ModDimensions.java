@@ -33,10 +33,27 @@ public class ModDimensions {
             new ResourceLocation(MythandMetal.MOD_ID, "mythandmetal_type"));
 
 
+    public static final ResourceKey<LevelStem> LAVADUNGEON_KEY = ResourceKey.create(Registries.LEVEL_STEM,
+            new ResourceLocation(MythandMetal.MOD_ID, "lavadungeondim"));
+    public static final ResourceKey<Level> LAVADUNGEON_LEVEL_KEY = ResourceKey.create(Registries.DIMENSION,
+            new ResourceLocation(MythandMetal.MOD_ID, "lavadungeondim"));
+    public static final ResourceKey<DimensionType> LAVADUNGEON_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE,
+            new ResourceLocation(MythandMetal.MOD_ID, "lavadungeon_type"));
+
+
+
+
+
+
+
+
+
+
+
     public static void bootstrapType(BootstapContext<DimensionType> context) {
         context.register(MYTHANDMETAL_DIM_TYPE, new DimensionType(
                 OptionalLong.of(12000), // fixedTime
-                false, // hasSkylight
+                true, // hasSkylight
                 false, // hasCeiling
                 false, // ultraWarm
                 false, // natural
@@ -48,7 +65,25 @@ public class ModDimensions {
                 512, // logicalHeight
                 BlockTags.INFINIBURN_OVERWORLD, // infiniburn
                 BuiltinDimensionTypes.OVERWORLD_EFFECTS, // effectsLocation
-                1.0f, // ambientLight
+                0.0f, // ambientLight
+                new DimensionType.MonsterSettings(false, false, ConstantInt.of(0), 0)));
+
+
+        context.register(LAVADUNGEON_DIM_TYPE, new DimensionType(
+                OptionalLong.of(12000), // fixedTime
+                false, // hasSkylight
+                false, // hasCeiling
+                false, // ultraWarm
+                false, // natural
+                1.0, // coordinateScale
+                false, // bedWorks
+                false, // respawnAnchorWorks
+                -64, // minY
+                512, // height
+                512, // logicalHeight
+                BlockTags.INFINIBURN_OVERWORLD, // infiniburn
+                BuiltinDimensionTypes.OVERWORLD_EFFECTS, // effectsLocation
+                0.0f, // ambientLight
                 new DimensionType.MonsterSettings(false, false, ConstantInt.of(0), 0)));
     }
 
@@ -76,7 +111,32 @@ public class ModDimensions {
         LevelStem stem = new LevelStem(dimTypes.getOrThrow(ModDimensions.MYTHANDMETAL_DIM_TYPE), noiseBasedChunkGenerator);
 
         context.register(MYTHANDMETAL_KEY, stem);
+
+
+
+
+
+
+
+
+
+        NoiseBasedChunkGenerator lavawrappedChunkGenerator = new NoiseBasedChunkGenerator(
+                new FixedBiomeSource(biomeRegistry.getOrThrow(ModBiomes.ASH_FOREST)),
+                noiseGenSettings.getOrThrow(NoiseGeneratorSettings.AMPLIFIED));
+
+        LevelStem lavastem = new LevelStem(dimTypes.getOrThrow(ModDimensions.LAVADUNGEON_DIM_TYPE), lavawrappedChunkGenerator);
+
+        context.register(LAVADUNGEON_KEY, lavastem);
+
+
     }
+
+
+
+
+
+
+
 
 
 }
