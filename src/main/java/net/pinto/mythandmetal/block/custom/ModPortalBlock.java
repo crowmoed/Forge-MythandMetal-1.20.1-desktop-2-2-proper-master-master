@@ -51,7 +51,7 @@ public class ModPortalBlock extends Block {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pPlayer.canChangeDimensions()) {
             try {
-                handleKaupenPortal(pPlayer, pPos);
+                handlePortaloverworld(pPlayer, pPos);
             } catch (CommandSyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -64,11 +64,11 @@ public class ModPortalBlock extends Block {
 
 
 
-    private void handleKaupenPortal(Entity player, BlockPos portalBlockPos) throws CommandSyntaxException {
+    private void handlePortaloverworld(Entity player, BlockPos portalBlockPos) throws CommandSyntaxException {
         if (player.level() instanceof ServerLevel currentLevel) {
             ServerPlayer serverPlayer = (ServerPlayer) player;
             MinecraftServer minecraftServer = currentLevel.getServer();
-            SavePortalData data = SavePortalData.get(currentLevel);
+            SavePortalData data = SavePortalData.get(minecraftServer);
 
             ResourceKey<Level> targetDimensionKey = player.level().dimension() == ModDimensions.MYTHANDMETAL_LEVEL_KEY
                     ? Level.OVERWORLD
@@ -99,6 +99,7 @@ public class ModPortalBlock extends Block {
                 } else {
                     int[] savedPortalPos = serverPlayer.getPersistentData().getIntArray("portalPosition");
                     targetPortalPos = new BlockPos(savedPortalPos[0]+1, savedPortalPos[1], savedPortalPos[2]);
+
                     serverPlayer.teleportTo(
                             targetDimension,
                             targetPortalPos.getX() + 0.5, // Center the player on the block

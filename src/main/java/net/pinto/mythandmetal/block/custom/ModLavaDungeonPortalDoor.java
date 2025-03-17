@@ -42,9 +42,9 @@ public class ModLavaDungeonPortalDoor extends Block {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer.canChangeDimensions()) {
+        if (pPlayer.canChangeDimensions() ) {
             try {
-                handleKaupenPortal(pPlayer, pPos);
+                handlePortalOverworld(pPlayer, pPos);
             } catch (CommandSyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -52,16 +52,17 @@ public class ModLavaDungeonPortalDoor extends Block {
         } else {
             return InteractionResult.CONSUME;
         }
+
     }
 
 
 
 
-    private void handleKaupenPortal(Entity player, BlockPos portalBlockPos) throws CommandSyntaxException {
+    private void handlePortalOverworld(Entity player, BlockPos portalBlockPos) throws CommandSyntaxException {
         if (player.level() instanceof ServerLevel currentLevel) {
             ServerPlayer serverPlayer = (ServerPlayer) player;
             MinecraftServer minecraftServer = currentLevel.getServer();
-            SavePortalData data = SavePortalData.get(currentLevel);
+            SavePortalData data = SavePortalData.get(minecraftServer);
 
             ResourceKey<Level> targetDimensionKey = player.level().dimension() == ModDimensions.LAVADUNGEON_LEVEL_KEY
                     ? Level.OVERWORLD
@@ -75,13 +76,16 @@ public class ModLavaDungeonPortalDoor extends Block {
                 BlockPos targetPortalPos;
                 if (targetDimensionKey == ModDimensions.LAVADUNGEON_LEVEL_KEY) {
                     targetPortalPos = new BlockPos(0, portalBlockPos.getY(), 0); // Fixed position in the modded dimension
-                    serverPlayer.getPersistentData().putIntArray("portalPosition", new int[]{portalBlockPos.getX(), portalBlockPos.getY(), portalBlockPos.getZ()});
+                    serverPlayer.getPersistentData().putIntArray("portalPositiondungeonlava", new int[]{portalBlockPos.getX(), portalBlockPos.getY(), portalBlockPos.getZ()});
+                    serverPlayer.getPersistentData().putString("fromdimension", player.level().dimension()+"");
+
                     targetPortalPos = ensureSafePortalLocation(targetDimension, targetPortalPos);
-                    if(data.getMyVariable() ==0){
+                    if(data.getDungeonlava() ==0){
+                        System.out.println("dude its not saving the data");
                         ResourceLocation structure =  new ResourceLocation("mythandmetal", "modstructures/nexus");
                         BlockPos placeposition = new BlockPos(targetPortalPos.getX()-3,targetPortalPos.getY(),targetPortalPos.getZ()-4);
-                        placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);                    }
-                    data.setMyVariable(1);
+                        placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);             data.setDungeonlava(1);       }
+
                     serverPlayer.teleportTo(
                             targetDimension,
                             targetPortalPos.getX() + 0.5,
@@ -89,11 +93,18 @@ public class ModLavaDungeonPortalDoor extends Block {
                             targetPortalPos.getZ() + 0.5,
                             player.getYRot(),
                             player.getXRot());
-                } else {
-                    int[] savedPortalPos = serverPlayer.getPersistentData().getIntArray("portalPosition");
+                }
+
+
+
+                else {
+                    int[] savedPortalPos = serverPlayer.getPersistentData().getIntArray("portalPositiondungeonlava");
+                    String fromdimension = serverPlayer.getPersistentData().getString("fromdimension");
+
                     targetPortalPos = new BlockPos(savedPortalPos[0]+1, savedPortalPos[1], savedPortalPos[2]);
+
                     serverPlayer.teleportTo(
-                            targetDimension,
+                            handfromdimension(fromdimension,minecraftServer),
                             targetPortalPos.getX() + 0.5,
                             targetPortalPos.getY()+1,
                             targetPortalPos.getZ() + 0.5,
@@ -106,6 +117,15 @@ public class ModLavaDungeonPortalDoor extends Block {
             }
         }
     }
+
+    private ServerLevel handfromdimension(String bruh,MinecraftServer level){
+        if(bruh.equals("ResourceKey[minecraft:dimension / minecraft:overworld]"))
+            return  level.getLevel(Level.OVERWORLD);
+
+        return level.getLevel(ModDimensions.MYTHANDMETAL_LEVEL_KEY);
+    }
+
+
 
 
     private BlockPos ensureSafePortalLocation(ServerLevel targetDimension, BlockPos portalPos) {
