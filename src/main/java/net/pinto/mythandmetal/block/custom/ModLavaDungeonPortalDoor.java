@@ -17,10 +17,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor;
@@ -29,22 +27,63 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.phys.BlockHitResult;
 import net.pinto.mythandmetal.block.SavePortalData;
+import net.pinto.mythandmetal.block.customEntity.ModLavaDungeonPortalDoorBlockEntity;
 import net.pinto.mythandmetal.worldgen.dimension.ModDimensions;
 
 import java.util.Optional;
+import java.util.Properties;
 
 
-public class ModLavaDungeonPortalDoor extends Block {
+public class ModLavaDungeonPortalDoor extends Block implements EntityBlock {
+
+    private boolean notaccessed;
+    private int accessnum;
 
     public ModLavaDungeonPortalDoor(Properties pProperties) {
         super(pProperties);
     }
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new ModLavaDungeonPortalDoorBlockEntity(pPos, pState); // Create a new block entity instance
+    }
+
+
+
+    /*@Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pPlayer.canChangeDimensions()) {
+            try {
+
+                handlePortalOverworld(pPlayer, pPos);
+            } catch (CommandSyntaxException e) {
+                throw new RuntimeException(e);
+            }
+            return InteractionResult.SUCCESS;
+        } else {
+            return InteractionResult.CONSUME;
+        }
+    }*/
+
+
+
+    public InteractionResult testuse(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (!pLevel.isClientSide && pLevel.getBlockEntity(pPos) instanceof ModLavaDungeonPortalDoorBlockEntity blockEntity) {
+            if (blockEntity.isNotaccessed()) {
+                blockEntity.setNotaccessed(false);
+                // Handle portal logic here
+                System.out.println("Portal activated for the first time!");
+            }
+        }
+        return InteractionResult.SUCCESS;
+    }
+
+
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer.canChangeDimensions() ) {
+        if (pPlayer.canChangeDimensions()&& pLevel.getBlockEntity(pPos) instanceof ModLavaDungeonPortalDoorBlockEntity blockEntity ) {
             try {
-                handlePortalOverworld(pPlayer, pPos);
+                handlePortalOverworld(pPlayer, pPos,blockEntity);
             } catch (CommandSyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -54,11 +93,7 @@ public class ModLavaDungeonPortalDoor extends Block {
         }
 
     }
-
-
-
-
-    private void handlePortalOverworld(Entity player, BlockPos portalBlockPos) throws CommandSyntaxException {
+    private void handlePortalOverworld(Entity player, BlockPos portalBlockPos,ModLavaDungeonPortalDoorBlockEntity blockEntity) throws CommandSyntaxException {
         if (player.level() instanceof ServerLevel currentLevel) {
             ServerPlayer serverPlayer = (ServerPlayer) player;
             MinecraftServer minecraftServer = currentLevel.getServer();
@@ -75,55 +110,91 @@ public class ModLavaDungeonPortalDoor extends Block {
 
                 BlockPos targetPortalPos;
                 if (targetDimensionKey == ModDimensions.LAVADUNGEON_LEVEL_KEY) {
-                    targetPortalPos = new BlockPos(0, portalBlockPos.getY(), 0); // Fixed position in the modded dimension
+                    if (blockEntity.isNotaccessed()) {
+                        blockEntity.setAccessnumber(data.getDungeonlava() );
+                        data.setDungeonlava(data.getDungeonlava() + 1);
+
+                    }
+                    targetPortalPos = new BlockPos(placementhelper(blockEntity), portalBlockPos.getY(), 0); // Fixed position in the modded dimension
                     serverPlayer.getPersistentData().putIntArray("portalPositiondungeonlava", new int[]{portalBlockPos.getX(), portalBlockPos.getY(), portalBlockPos.getZ()});
-                    serverPlayer.getPersistentData().putString("fromdimension", player.level().dimension()+"");
+                    serverPlayer.getPersistentData().putString("fromdimension", player.level().dimension() + "");
 
                     targetPortalPos = ensureSafePortalLocation(targetDimension, targetPortalPos);
-                    if(data.getDungeonlava() ==0){
-                        System.out.println("dude its not saving the data");
-                        ResourceLocation structure =  new ResourceLocation("mythandmetal", "modstructures/nexus");
-                        BlockPos placeposition = new BlockPos(targetPortalPos.getX()-3,targetPortalPos.getY(),targetPortalPos.getZ()-4);
-                        placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);             data.setDungeonlava(1);       }
+
+                    if (blockEntity.isNotaccessed()) {
+                        System.out.println("true");
+
+
+
+                        placelavadungeon();
+                        ResourceLocation structure = new ResourceLocation("mythandmetal", "modstructures/nexus");
+                        BlockPos placeposition = new BlockPos(targetPortalPos.getX() - 3, targetPortalPos.getY(), targetPortalPos.getZ() - 4);
+                        placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);
+                        blockEntity.setNotaccessed(false);
+
+
+                    }
 
                     serverPlayer.teleportTo(
                             targetDimension,
                             targetPortalPos.getX() + 0.5,
-                            targetPortalPos.getY()+1,
+                            targetPortalPos.getY() + 1,
                             targetPortalPos.getZ() + 0.5,
                             player.getYRot(),
                             player.getXRot());
-                }
-
-
-
-                else {
+                } else {
                     int[] savedPortalPos = serverPlayer.getPersistentData().getIntArray("portalPositiondungeonlava");
                     String fromdimension = serverPlayer.getPersistentData().getString("fromdimension");
 
-                    targetPortalPos = new BlockPos(savedPortalPos[0]+1, savedPortalPos[1], savedPortalPos[2]);
+                    targetPortalPos = new BlockPos(savedPortalPos[0] + 1, savedPortalPos[1], savedPortalPos[2]);
 
                     serverPlayer.teleportTo(
-                            handfromdimension(fromdimension,minecraftServer),
+                            handfromdimension(fromdimension, minecraftServer),
                             targetPortalPos.getX() + 0.5,
-                            targetPortalPos.getY()+1,
+                            targetPortalPos.getY() + 1,
                             targetPortalPos.getZ() + 0.5,
                             player.getYRot(),
                             player.getXRot());
                 }
-
-
-
             }
         }
     }
 
-    private ServerLevel handfromdimension(String bruh,MinecraftServer level){
-        if(bruh.equals("ResourceKey[minecraft:dimension / minecraft:overworld]"))
-            return  level.getLevel(Level.OVERWORLD);
+    private int placementhelper(ModLavaDungeonPortalDoorBlockEntity blockEntity) {
+        return blockEntity.getAccessNumber() % 2 == 0 ? 500 * blockEntity.getAccessNumber() : -500 * blockEntity.getAccessNumber();
+    }
+
+    private void placelavadungeon() {
+
+    }
+
+
+
+
+
+
+
+    private ServerLevel handfromdimension(String bruh, MinecraftServer level) {
+        if (bruh.equals("ResourceKey[minecraft:dimension / minecraft:overworld]"))
+            return level.getLevel(Level.OVERWORLD);
 
         return level.getLevel(ModDimensions.MYTHANDMETAL_LEVEL_KEY);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -132,7 +203,7 @@ public class ModLavaDungeonPortalDoor extends Block {
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(portalPos.getX(), 255, portalPos.getZ());
 
         while (mutablePos.getY() >= 0) {
-            if ((targetDimension.getBlockState(mutablePos).getBlock() instanceof Block)&& (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.AIR)&& (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.VOID_AIR&& (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.CAVE_AIR))) {
+            if ((targetDimension.getBlockState(mutablePos).getBlock() instanceof Block) && (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.AIR) && (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.VOID_AIR && (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.CAVE_AIR))) {
 
                 BlockPos abovePos = mutablePos.above();
                 if (targetDimension.getBlockState(abovePos).isAir()) {
@@ -146,19 +217,11 @@ public class ModLavaDungeonPortalDoor extends Block {
         return mutablePos;
     }
 
-
-
-
-
-
-
     private static final DynamicCommandExceptionType ERROR_TEMPLATE_INVALID = new DynamicCommandExceptionType((p_214582_) -> {
         return Component.translatable("commands.place.template.invalid", p_214582_);
     });
 
-
     private static final SimpleCommandExceptionType ERROR_TEMPLATE_FAILED = new SimpleCommandExceptionType(Component.translatable("commands.place.template.failed"));
-
 
     public static int placePortalTemplate(ServerLevel serverlevel2, ResourceLocation pTemplate, BlockPos pPos, Rotation pRotation, Mirror pMirror, float pIntegrity, int pSeed) throws CommandSyntaxException {
         ServerLevel serverlevel = serverlevel2;
@@ -178,10 +241,10 @@ public class ModLavaDungeonPortalDoor extends Block {
             checkLoaded(serverlevel, new ChunkPos(pPos), new ChunkPos(pPos.offset(structuretemplate.getSize())));
             StructurePlaceSettings structureplacesettings = (new StructurePlaceSettings()).setMirror(pMirror).setRotation(pRotation);
             if (pIntegrity < 1.0F) {
-                structureplacesettings.clearProcessors().addProcessor(new BlockRotProcessor(pIntegrity)).setRandom(StructureBlockEntity.createRandom((long)pSeed));
+                structureplacesettings.clearProcessors().addProcessor(new BlockRotProcessor(pIntegrity)).setRandom(StructureBlockEntity.createRandom((long) pSeed));
             }
 
-            boolean flag = structuretemplate.placeInWorld(serverlevel, pPos, pPos, structureplacesettings, StructureBlockEntity.createRandom((long)pSeed), 2);
+            boolean flag = structuretemplate.placeInWorld(serverlevel, pPos, pPos, structureplacesettings, StructureBlockEntity.createRandom((long) pSeed), 2);
             if (!flag) {
                 throw ERROR_TEMPLATE_FAILED.create();
             } else {
@@ -189,7 +252,6 @@ public class ModLavaDungeonPortalDoor extends Block {
             }
         }
     }
-
 
     private static void checkLoaded(ServerLevel pLevel, ChunkPos pStart, ChunkPos pEnd) {
         ChunkPos.rangeClosed(pStart, pEnd).forEach((chunkPos) -> {
@@ -199,5 +261,4 @@ public class ModLavaDungeonPortalDoor extends Block {
             }
         });
     }
-
 }

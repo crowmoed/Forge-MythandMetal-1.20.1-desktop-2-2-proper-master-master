@@ -5,6 +5,7 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -15,6 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.pinto.mythandmetal.MythandMetal;
 import net.pinto.mythandmetal.block.custom.*;
+import net.pinto.mythandmetal.block.customEntity.ModLavaDungeonPortalDoorBlockEntity;
 import net.pinto.mythandmetal.item.ModItems;
 import net.pinto.mythandmetal.worldgen.tree.AshTreeGrower;
 import net.pinto.mythandmetal.worldgen.tree.EnchantedTreeGrower;
@@ -114,6 +116,8 @@ public class ModBlocks {
 
 
 
+
+
     private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
         return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
@@ -121,9 +125,23 @@ public class ModBlocks {
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
     }
+
+
+
+
     private static RotatedPillarBlock log(MapColor pTopMapColor, MapColor pSideMapColor) {
         return new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor((p_152624_) -> {
             return p_152624_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? pTopMapColor : pSideMapColor;
         }).instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
     }
+
+
+
+
+
+
+
+
+
+
 }

@@ -31,6 +31,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.pinto.mythandmetal.block.ModBlocks;
+import net.pinto.mythandmetal.block.customEntity.MyBlockEntityTypes;
 import net.pinto.mythandmetal.entity.AshenWolf.AshenWolfRenderer;
 import net.pinto.mythandmetal.entity.ModEntites;
 import net.pinto.mythandmetal.item.ModCreativeModeTabs;
@@ -79,7 +80,7 @@ public class MythandMetal
         ModCreativeModeTabs.register(modEventBus);
         ModItems.register(modEventBus);
         ModEntites.register(modEventBus);
-
+        MyBlockEntityTypes.register(modEventBus);
         ModBlocks.register(modEventBus);
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
