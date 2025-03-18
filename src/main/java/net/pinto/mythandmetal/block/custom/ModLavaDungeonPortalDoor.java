@@ -115,11 +115,10 @@ public class ModLavaDungeonPortalDoor extends Block implements EntityBlock {
                         data.setDungeonlava(data.getDungeonlava() + 1);
 
                     }
-                    targetPortalPos = new BlockPos(placementhelper(blockEntity), portalBlockPos.getY(), 0); // Fixed position in the modded dimension
+                    targetPortalPos = new BlockPos(placementhelper(blockEntity), 0, 0); // Fixed position in the modded dimension
                     serverPlayer.getPersistentData().putIntArray("portalPositiondungeonlava", new int[]{portalBlockPos.getX(), portalBlockPos.getY(), portalBlockPos.getZ()});
                     serverPlayer.getPersistentData().putString("fromdimension", player.level().dimension() + "");
 
-                    targetPortalPos = ensureSafePortalLocation(targetDimension, targetPortalPos);
 
                     if (blockEntity.isNotaccessed()) {
                         System.out.println("true");
@@ -127,8 +126,8 @@ public class ModLavaDungeonPortalDoor extends Block implements EntityBlock {
 
 
                         placelavadungeon();
-                        ResourceLocation structure = new ResourceLocation("mythandmetal", "modstructures/nexus");
-                        BlockPos placeposition = new BlockPos(targetPortalPos.getX() - 3, targetPortalPos.getY(), targetPortalPos.getZ() - 4);
+                        ResourceLocation structure = new ResourceLocation("mythandmetal", "modstructures/spawnroomdungeon");
+                        BlockPos placeposition = new BlockPos(targetPortalPos.getX() , targetPortalPos.getY()-1, targetPortalPos.getZ());
                         placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);
                         blockEntity.setNotaccessed(false);
 
@@ -137,9 +136,9 @@ public class ModLavaDungeonPortalDoor extends Block implements EntityBlock {
 
                     serverPlayer.teleportTo(
                             targetDimension,
-                            targetPortalPos.getX() + 0.5,
+                            targetPortalPos.getX() + 8,
                             targetPortalPos.getY() + 1,
-                            targetPortalPos.getZ() + 0.5,
+                            targetPortalPos.getZ() + 3.5,
                             player.getYRot(),
                             player.getXRot());
                 } else {
