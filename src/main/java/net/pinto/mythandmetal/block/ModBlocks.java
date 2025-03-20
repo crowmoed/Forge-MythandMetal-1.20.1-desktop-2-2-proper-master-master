@@ -108,8 +108,12 @@ public class ModBlocks {
         return toReturn;
     }
 
+
+
     public static final RegistryObject<Block> MOD_PORTAL = registerBlock("mod_portal",
             () -> new ModPortalBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noLootTable().noOcclusion().noCollission()));
+
+
 
     public static final RegistryObject<Block> LAVA_MOD_PORTAL = registerBlock("lava_mod_portal",
             () -> new ModLavaDungeonPortalDoor(BlockBehaviour.Properties.copy(Blocks.STONE).noLootTable().noOcclusion().noCollission()));

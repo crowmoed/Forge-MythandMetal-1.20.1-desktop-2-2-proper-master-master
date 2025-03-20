@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mythandmetal:block/lava_mod_portal",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mythandmetal:block/lava_mod_portal"
+    },
+    "facing=south": {
+      "model": "mythandmetal:block/lava_mod_portal"
+    },
+    "facing=west": {
+      "model": "mythandmetal:block/lava_mod_portal",
+      "y": 90
+    }
+  }
+}

@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -14,76 +15,145 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.pinto.mythandmetal.block.SavePortalData;
 import net.pinto.mythandmetal.block.customEntity.ModLavaDungeonPortalDoorBlockEntity;
 import net.pinto.mythandmetal.worldgen.dimension.ModDimensions;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.Properties;
 
 
-public class ModLavaDungeonPortalDoor extends Block implements EntityBlock {
-
-    private boolean notaccessed;
-    private int accessnum;
+public class ModLavaDungeonPortalDoor extends DirectionalBlock implements EntityBlock {
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING; // Define the FACING property
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final EnumProperty<DoorHingeSide> SIDE = BlockStateProperties.DOOR_HINGE;
 
     public ModLavaDungeonPortalDoor(Properties pProperties) {
         super(pProperties);
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.NORTH) // Default facing direction
+                .setValue(HALF, DoubleBlockHalf.LOWER) // Default to the lower half
+                .setValue(SIDE, DoorHingeSide.LEFT)); // Default hinge side
     }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, HALF, SIDE); // Add FACING, HALF, and SIDE properties
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockPos pos = context.getClickedPos();
+        Level level = context.getLevel();
+
+        // Ensure the block can be placed (upper block space is free)
+        if (pos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(pos.above()).canBeReplaced(context)) {
+            return this.defaultBlockState()
+                    .setValue(FACING, context.getHorizontalDirection()) // Set the FACING property
+                    .setValue(HALF, DoubleBlockHalf.LOWER); // Set the HALF property
+        }
+
+        return null; // Prevent placement if the upper space is occupied
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+
+        Direction facing = state.getValue(FACING); // Get the facing direction
+        DoorHingeSide side = state.getValue(SIDE); // Get the hinge side
+
+        // Calculate the positions for the other three blocks
+        BlockPos rightPos = pos.relative(facing.getClockWise());
+        BlockPos upperPos = pos.above();
+        BlockPos upperRightPos = rightPos.above();
+
+        // Place the lower-right block
+        level.setBlock(rightPos, state.setValue(HALF, DoubleBlockHalf.LOWER).setValue(SIDE, side), 3);
+
+        // Place the upper-left block
+        level.setBlock(upperPos, state.setValue(HALF, DoubleBlockHalf.UPPER).setValue(SIDE, side), 3);
+
+        // Place the upper-right block
+        level.setBlock(upperRightPos, state.setValue(HALF, DoubleBlockHalf.UPPER).setValue(SIDE, side), 3);
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        DoubleBlockHalf half = state.getValue(HALF); // Get the half (lower or upper)
+        DoorHingeSide side = state.getValue(SIDE); // Get the hinge side (left or right)
+        Direction facing = state.getValue(FACING); // Get the facing direction
+
+        // Calculate the positions for the other three blocks
+        BlockPos rightPos = pos.relative(facing.getClockWise());
+        BlockPos upperPos = pos.above();
+        BlockPos upperRightPos = rightPos.above();
+
+        // Break all parts of the structure
+        if (half == DoubleBlockHalf.LOWER) {
+            // If breaking the lower block, break the upper blocks as well
+            level.destroyBlock(rightPos, !player.isCreative());
+            level.destroyBlock(upperPos, !player.isCreative());
+            level.destroyBlock(upperRightPos, !player.isCreative());
+        } else {
+            // If breaking the upper block, break the lower blocks as well
+            level.destroyBlock(pos.below(), !player.isCreative());
+            level.destroyBlock(rightPos.below(), !player.isCreative());
+            level.destroyBlock(rightPos, !player.isCreative());
+        }
+
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        DoubleBlockHalf half = state.getValue(HALF); // Get the half (lower or upper)
+        BlockPos belowPos = pos.below(); // Get the block below
+        BlockState belowState = level.getBlockState(belowPos); // Get the state of the block below
+
+        // Lower half must be placed on a solid surface
+        if (half == DoubleBlockHalf.LOWER) {
+            return belowState.isFaceSturdy(level, belowPos, Direction.UP);
+        }
+
+        // Upper half must have the lower half as the same block
+        return belowState.is(this) && belowState.getValue(HALF) == DoubleBlockHalf.LOWER;
+    }
+
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new ModLavaDungeonPortalDoorBlockEntity(pPos, pState); // Create a new block entity instance
     }
 
-
-
-    /*@Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer.canChangeDimensions()) {
-            try {
-
-                handlePortalOverworld(pPlayer, pPos);
-            } catch (CommandSyntaxException e) {
-                throw new RuntimeException(e);
-            }
-            return InteractionResult.SUCCESS;
-        } else {
-            return InteractionResult.CONSUME;
-        }
-    }*/
-
-
-
-    public InteractionResult testuse(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (!pLevel.isClientSide && pLevel.getBlockEntity(pPos) instanceof ModLavaDungeonPortalDoorBlockEntity blockEntity) {
-            if (blockEntity.isNotaccessed()) {
-                blockEntity.setNotaccessed(false);
-                // Handle portal logic here
-                System.out.println("Portal activated for the first time!");
-            }
-        }
-        return InteractionResult.SUCCESS;
-    }
-
-
-
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer.canChangeDimensions()&& pLevel.getBlockEntity(pPos) instanceof ModLavaDungeonPortalDoorBlockEntity blockEntity ) {
+        if (pPlayer.canChangeDimensions() && pLevel.getBlockEntity(pPos) instanceof ModLavaDungeonPortalDoorBlockEntity blockEntity) {
             try {
-                handlePortalOverworld(pPlayer, pPos,blockEntity);
+                handlePortalOverworld(pPlayer, pPos, blockEntity);
             } catch (CommandSyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -91,8 +161,10 @@ public class ModLavaDungeonPortalDoor extends Block implements EntityBlock {
         } else {
             return InteractionResult.CONSUME;
         }
-
     }
+
+    // Other methods (handlePortalOverworld, placementhelper, placelavadungeon, etc.) remain unchanged
+
     private void handlePortalOverworld(Entity player, BlockPos portalBlockPos,ModLavaDungeonPortalDoorBlockEntity blockEntity) throws CommandSyntaxException {
         if (player.level() instanceof ServerLevel currentLevel) {
             ServerPlayer serverPlayer = (ServerPlayer) player;

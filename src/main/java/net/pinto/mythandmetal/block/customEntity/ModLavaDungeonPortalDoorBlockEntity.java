@@ -15,6 +15,10 @@ public class ModLavaDungeonPortalDoorBlockEntity extends BlockEntity {
     public boolean isNotaccessed() {
         return notaccessed;
     }
+
+    public void   setAccessNumber() {
+        accessnumber = 0;
+    }
     public int getAccessNumber() {
         return accessnumber;
     }
