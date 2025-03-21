@@ -1,9 +1,8 @@
 package net.pinto.mythandmetal.block;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.saveddata.SavedData;
 
 public class SavePortalData extends SavedData {
     private static final String DATA_NAME = "mythandmetal_global_data";

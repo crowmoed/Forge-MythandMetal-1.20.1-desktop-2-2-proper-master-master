@@ -10,8 +10,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.pinto.mythandmetal.MythandMetal;
 import net.pinto.mythandmetal.block.ModBlocks;
-import net.pinto.mythandmetal.item.ModItems;
 import net.pinto.mythandmetal.entity.CustVillager;
+import net.pinto.mythandmetal.item.ModItems;
 
 import java.util.List;
 

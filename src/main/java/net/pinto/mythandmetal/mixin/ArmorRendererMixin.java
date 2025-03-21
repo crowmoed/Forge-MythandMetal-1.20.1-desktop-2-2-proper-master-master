@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.eventbus.api.Cancelable;
 import net.pinto.mythandmetal.rarity.ItemRarityHelper;
 import net.pinto.mythandmetal.rarity.RarityLevel;
 import net.pinto.mythandmetal.renderer.GlintRenderers;
@@ -38,8 +36,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-
-import static net.pinto.mythandmetal.rarity.RarityLevel.TIERONE;
 
 
 @Mixin(HumanoidArmorLayer.class)

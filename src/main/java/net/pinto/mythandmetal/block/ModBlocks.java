@@ -5,7 +5,6 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -16,7 +15,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.pinto.mythandmetal.MythandMetal;
 import net.pinto.mythandmetal.block.custom.*;
-import net.pinto.mythandmetal.block.customEntity.ModLavaDungeonPortalDoorBlockEntity;
 import net.pinto.mythandmetal.item.ModItems;
 import net.pinto.mythandmetal.worldgen.tree.AshTreeGrower;
 import net.pinto.mythandmetal.worldgen.tree.EnchantedTreeGrower;
@@ -116,7 +114,7 @@ public class ModBlocks {
 
 
     public static final RegistryObject<Block> LAVA_MOD_PORTAL = registerBlock("lava_mod_portal",
-            () -> new ModLavaDungeonPortalDoor(BlockBehaviour.Properties.copy(Blocks.STONE).noLootTable().noOcclusion().noCollission()));
+            () -> new ModLavaDungeonPortalDoor(BlockBehaviour.Properties.copy(Blocks.STONE).noLootTable().noOcclusion().noCollission().destroyTime(300.0F)));
 
 
 
