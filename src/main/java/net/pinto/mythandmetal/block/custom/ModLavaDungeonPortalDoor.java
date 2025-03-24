@@ -190,8 +190,8 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
     private void placelavadungeon(BlockPos targetPortalPos, ServerLevel targetDimension) throws CommandSyntaxException {
         ResourceLocation structure = new ResourceLocation("mythandmetal", "modstructures/spawnroomdungeon");
         BlockPos placeposition = new BlockPos(targetPortalPos.getX() , targetPortalPos.getY()-1, targetPortalPos.getZ());
-        placehallway(targetPortalPos,targetDimension);
         placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);
+        placehallway(targetPortalPos,targetDimension);
     }
 
 
