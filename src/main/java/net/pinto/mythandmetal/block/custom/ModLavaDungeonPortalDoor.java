@@ -34,10 +34,14 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.phys.BlockHitResult;
 import net.pinto.mythandmetal.block.SavePortalData;
-import net.pinto.mythandmetal.block.customEntity.ModLavaDungeonPortalDoorBlockEntity;
+import net.pinto.mythandmetal.block.customEntity.ModDungeonPortalDoorBlockEntity;
+
 import net.pinto.mythandmetal.worldgen.dimension.ModDimensions;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -59,172 +63,18 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
         builder.add(FACING, HALF, SIDE);
     }
 
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockPos pos = context.getClickedPos();
-        Level level = context.getLevel();
-
-        if (pos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(pos.above()).canBeReplaced(context)) {
-            return this.defaultBlockState()
-                    .setValue(FACING, context.getHorizontalDirection())
-                    .setValue(HALF, DoubleBlockHalf.LOWER);
-        }
-
-        return null;
-    }
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(level, pos, state, placer, stack);
-
-        Direction facing = state.getValue(FACING);
-        DoorHingeSide side = state.getValue(SIDE);
-
-        BlockPos rightPos = pos.relative(facing.getClockWise());
-        BlockPos upperPos = pos.above();
-        BlockPos upperRightPos = rightPos.above();
 
 
 
-        level.setBlock(rightPos, state.setValue(HALF, DoubleBlockHalf.LOWER).setValue(SIDE, side), 3);
-
-
-        level.setBlock(upperPos, state.setValue(HALF, DoubleBlockHalf.UPPER).setValue(SIDE, side), 3);
-
-        level.setBlock(upperRightPos, state.setValue(HALF, DoubleBlockHalf.UPPER).setValue(SIDE, side), 3);
-
-
-
-
-    }
-
-    @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        DoubleBlockHalf half = state.getValue(HALF);
-        DoorHingeSide side = state.getValue(SIDE);
-        Direction facing = state.getValue(FACING);
-
-        BlockPos rightPos = pos.relative(facing.getClockWise());
-        BlockPos upperPos = pos.above();
-        BlockPos upperRightPos = rightPos.above();
-
-
-        BlockPos opprightpos = new BlockPos(rightPos.getX()+2,rightPos.getY(),rightPos.getZ());
-        BlockPos upperRightPosopp = new BlockPos(upperRightPos.getX()+2,upperRightPos.getY(),upperRightPos.getZ());
-
-
-        BlockPos opprightposz = new BlockPos(rightPos.getX()-2,rightPos.getY(),rightPos.getZ());
-        BlockPos upperRightPosoppz = new BlockPos(upperRightPos.getX()-2,upperRightPos.getY(),upperRightPos.getZ());
-
-
-        BlockPos opprightposz2 = new BlockPos(rightPos.getX(),rightPos.getY(),rightPos.getZ()-2);
-        BlockPos upperRightPosoppz2 = new BlockPos(upperRightPos.getX(),upperRightPos.getY(),upperRightPos.getZ()-2);
-
-
-        BlockPos opprightposz22 = new BlockPos(rightPos.getX(),rightPos.getY(),rightPos.getZ()+2);
-        BlockPos upperRightPosoppz22 = new BlockPos(upperRightPos.getX(),upperRightPos.getY(),upperRightPos.getZ()+2);
-
-
-        if (half == DoubleBlockHalf.LOWER&&(level.getBlockState(rightPos).getBlock() instanceof ModLavaDungeonPortalDoor)) {
-            level.destroyBlock(rightPos, !player.isCreative());
-            level.destroyBlock(upperPos, !player.isCreative());
-            level.destroyBlock(upperRightPos, !player.isCreative());
-        } else if (level.getBlockState(rightPos).getBlock() instanceof ModLavaDungeonPortalDoor){
-            level.destroyBlock(pos.below(), !player.isCreative());
-            level.destroyBlock(rightPos.below(), !player.isCreative());
-            level.destroyBlock(rightPos, !player.isCreative());
-        }
-        else if (half == DoubleBlockHalf.LOWER&&(level.getBlockState(opprightpos).getBlock() instanceof ModLavaDungeonPortalDoor)) {
-            level.destroyBlock(opprightpos, !player.isCreative());
-            level.destroyBlock(upperPos, !player.isCreative());
-            level.destroyBlock(upperRightPosopp, !player.isCreative());
-
-        } else if (level.getBlockState(opprightpos).getBlock() instanceof ModLavaDungeonPortalDoor){
-            level.destroyBlock(pos.below(), !player.isCreative());
-            level.destroyBlock(opprightpos.below(), !player.isCreative());
-            level.destroyBlock(opprightpos, !player.isCreative());
-        }
-
-
-
-        else if (half == DoubleBlockHalf.LOWER&&(level.getBlockState(opprightposz).getBlock() instanceof ModLavaDungeonPortalDoor)) {
-            level.destroyBlock(opprightposz, !player.isCreative());
-            level.destroyBlock(upperPos, !player.isCreative());
-            level.destroyBlock(upperRightPosoppz, !player.isCreative());
-
-        } else if (level.getBlockState(opprightposz).getBlock() instanceof ModLavaDungeonPortalDoor){
-            level.destroyBlock(pos.below(), !player.isCreative());
-            level.destroyBlock(opprightposz.below(), !player.isCreative());
-            level.destroyBlock(opprightposz, !player.isCreative());
-        }
-
-
-        else if (half == DoubleBlockHalf.LOWER&&(level.getBlockState(opprightposz2).getBlock() instanceof ModLavaDungeonPortalDoor)) {
-            level.destroyBlock(opprightposz2, !player.isCreative());
-            level.destroyBlock(upperPos, !player.isCreative());
-            level.destroyBlock(upperRightPosoppz2, !player.isCreative());
-
-        } else if (level.getBlockState(opprightposz2).getBlock() instanceof ModLavaDungeonPortalDoor){
-            level.destroyBlock(pos.below(), !player.isCreative());
-            level.destroyBlock(opprightposz2.below(), !player.isCreative());
-            level.destroyBlock(opprightposz2, !player.isCreative());
-        }
-
-
-        else if (half == DoubleBlockHalf.LOWER&&(level.getBlockState(opprightposz22).getBlock() instanceof ModLavaDungeonPortalDoor)) {
-            level.destroyBlock(opprightposz22, !player.isCreative());
-            level.destroyBlock(upperPos, !player.isCreative());
-            level.destroyBlock(upperRightPosoppz22, !player.isCreative());
-
-        } else if (level.getBlockState(opprightposz22).getBlock() instanceof ModLavaDungeonPortalDoor){
-            level.destroyBlock(pos.below(), !player.isCreative());
-            level.destroyBlock(opprightposz22.below(), !player.isCreative());
-            level.destroyBlock(opprightposz22, !player.isCreative());
-        }
-
-
-        /*if(level.getBlockState(opprightpos).getBlock() instanceof ModLavaDungeonPortalDoor){
-            System.out.println("working");
-            level.destroyBlock(opprightpos, !player.isCreative());
-            level.destroyBlock(upperPosopp, !player.isCreative());
-            level.destroyBlock(upperRightPosopp, !player.isCreative());
-        }
-
-
-        if (half == DoubleBlockHalf.LOWER) {
-            level.destroyBlock(rightPos, !player.isCreative());
-            level.destroyBlock(upperPos, !player.isCreative());
-            level.destroyBlock(upperRightPos, !player.isCreative());
-        } else {
-            level.destroyBlock(pos.below(), !player.isCreative());
-            level.destroyBlock(rightPos.below(), !player.isCreative());
-            level.destroyBlock(rightPos, !player.isCreative());
-        }*/
-
-        super.playerWillDestroy(level, pos, state, player);
-    }
-
-    @Override
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        DoubleBlockHalf half = state.getValue(HALF);
-        BlockPos belowPos = pos.below();
-        BlockState belowState = level.getBlockState(belowPos);
-
-        if (half == DoubleBlockHalf.LOWER) {
-            return belowState.isFaceSturdy(level, belowPos, Direction.UP);
-        }
-
-        return belowState.is(this) && belowState.getValue(HALF) == DoubleBlockHalf.LOWER;
-    }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ModLavaDungeonPortalDoorBlockEntity(pPos, pState);
+        return new ModDungeonPortalDoorBlockEntity(pPos, pState);
     }
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer.canChangeDimensions() && pLevel.getBlockEntity(pPos) instanceof ModLavaDungeonPortalDoorBlockEntity blockEntity) {
+        if (pPlayer.canChangeDimensions() && pLevel.getBlockEntity(pPos) instanceof ModDungeonPortalDoorBlockEntity blockEntity) {
             try {
                 handlePortalOverworld(pPlayer, pPos, blockEntity);
             } catch (CommandSyntaxException e) {
@@ -237,7 +87,7 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
     }
 
 
-    private void handlePortalOverworld(Entity player, BlockPos portalBlockPos,ModLavaDungeonPortalDoorBlockEntity blockEntity) throws CommandSyntaxException {
+    private void handlePortalOverworld(Entity player, BlockPos portalBlockPos2,ModDungeonPortalDoorBlockEntity blockEntity) throws CommandSyntaxException {
         if (player.level() instanceof ServerLevel currentLevel) {
             ServerPlayer serverPlayer = (ServerPlayer) player;
             MinecraftServer minecraftServer = currentLevel.getServer();
@@ -257,89 +107,33 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
                     if (blockEntity.isNotaccessed()) {
                         blockEntity.setAccessnumber(data.getDungeonlava() );
                         Direction facing = blockEntity.getBlockState().getValue(FACING);
+                        BlockPos portalBlockPos = blockEntity.getBlockPos();
 
+// Calculate all positions to check within a 2-block cube
+                        List<BlockPos> allPositions = new ArrayList<>();
 
+// Check 4 vertical layers: below, same, upper, and upper+1
+                        for (int yOffset = -1; yOffset <= 2; yOffset++) {
+                            // Check 5x5 grid horizontally for each layer
+                            for (int dx = -2; dx <= 2; dx++) {
+                                for (int dz = -2; dz <= 2; dz++) {
+                                    // Skip the portal's own position in its main layer
+                                    if (yOffset == 0 && dx == 0 && dz == 0) continue;
 
-                        BlockPos belowpos = portalBlockPos.below();
-                        BlockPos belowposr = new BlockPos(belowpos.getX()-1,belowpos.getY(),belowpos.getZ());
-                        BlockPos belowposl = new BlockPos(belowpos.getX()+1,belowpos.getY(),belowpos.getZ());
-                        BlockPos belowposz = new BlockPos(belowpos.getX(),belowpos.getY(),belowpos.getZ()-1);
-                        BlockPos belowposz2 = new BlockPos(belowpos.getX(),belowpos.getY(),belowpos.getZ()+1);
+                                    // Limit to diamond-shaped area (Manhattan distance <= 2)
+                                    if (Math.abs(dx) + Math.abs(dz) > 2) continue;
 
+                                    allPositions.add(portalBlockPos.offset(dx, yOffset, dz));
+                                }
+                            }
+                        }
 
-
-                        BlockPos rightPos = portalBlockPos.relative(facing.getClockWise());
-                        BlockPos upperPos = portalBlockPos.above();
-                        BlockPos upperRightPos = rightPos.above();
-                        currentLevel.getBlockState(portalBlockPos);
-
-                        // here
-                        BlockPos opprightpos = new BlockPos(rightPos.getX()+2,rightPos.getY(),rightPos.getZ());
-                        BlockPos upperRightPosopp = new BlockPos(upperRightPos.getX()+2,upperRightPos.getY(),upperRightPos.getZ());
-
-
-                        BlockPos opprightposz = new BlockPos(rightPos.getX()-2,rightPos.getY(),rightPos.getZ());
-                        BlockPos upperRightPosoppz = new BlockPos(upperRightPos.getX()-2,upperRightPos.getY(),upperRightPos.getZ());
-
-
-                        BlockPos opprightposz2 = new BlockPos(rightPos.getX(),rightPos.getY(),rightPos.getZ()-2);
-                        BlockPos upperRightPosoppz2 = new BlockPos(upperRightPos.getX(),upperRightPos.getY(),upperRightPos.getZ()-2);
-
-
-                        BlockPos opprightposz22 = new BlockPos(rightPos.getX(),rightPos.getY(),rightPos.getZ()+2);
-                        BlockPos upperRightPosoppz22 = new BlockPos(upperRightPos.getX(),upperRightPos.getY(),upperRightPos.getZ()+2);
-                        //stop
-                        if (currentLevel.getBlockEntity(belowposz2) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                        if (currentLevel.getBlockEntity(belowposz) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                        if (currentLevel.getBlockEntity(belowposl) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-
-                        if (currentLevel.getBlockEntity(belowposr) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-
-                            if (currentLevel.getBlockEntity(rightPos) instanceof ModLavaDungeonPortalDoorBlockEntity rightBlockEntity) {
-                                rightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                                rightBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(upperPos) instanceof ModLavaDungeonPortalDoorBlockEntity upperBlockEntity) {
-                                upperBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                                upperBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(upperRightPos) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                                upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                                upperRightBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(belowpos) instanceof ModLavaDungeonPortalDoorBlockEntity upperBlockEntity) {
-                            upperBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(opprightpos) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(upperRightPosopp) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(opprightposz) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(upperRightPosoppz) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                        if (currentLevel.getBlockEntity(opprightposz22) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                        if (currentLevel.getBlockEntity(upperRightPosoppz22) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(opprightposz2) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-                            if (currentLevel.getBlockEntity(upperRightPosoppz2) instanceof ModLavaDungeonPortalDoorBlockEntity upperRightBlockEntity) {
-                            upperRightBlockEntity.setAccessnumber(blockEntity.getAccessNumber());
-                            upperRightBlockEntity.setNotaccessed(false);}
-
+// Update all relevant blocks
+                        for (BlockPos checkPos : allPositions) {
+                            if (currentLevel.getBlockEntity(checkPos) instanceof ModDungeonPortalDoorBlockEntity adjacentEntity) {
+                                adjacentEntity.setAccessnumber(blockEntity.getAccessNumber());
+                                adjacentEntity.setNotaccessed(false);
+                            }}
 
 
 
@@ -349,7 +143,7 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
                         data.setDungeonlava(data.getDungeonlava() + 1);
                     }
                     targetPortalPos = new BlockPos(placementhelper(blockEntity), 0, 0); // Fixed position in the modded dimension
-                    serverPlayer.getPersistentData().putIntArray("portalPositiondungeonlava", new int[]{portalBlockPos.getX(), portalBlockPos.getY(), portalBlockPos.getZ()});
+                    serverPlayer.getPersistentData().putIntArray("portalPositiondungeonlava", new int[]{portalBlockPos2.getX(), portalBlockPos2.getY(), portalBlockPos2.getZ()});
                     serverPlayer.getPersistentData().putString("fromdimension", player.level().dimension() + "");
 
 
@@ -389,20 +183,28 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
         }
     }
 
-    private int placementhelper(ModLavaDungeonPortalDoorBlockEntity blockEntity) {
+    private int placementhelper(ModDungeonPortalDoorBlockEntity blockEntity) {
         return blockEntity.getAccessNumber() % 2 == 0 ? 500 * blockEntity.getAccessNumber() : -500 * blockEntity.getAccessNumber();
     }
 
     private void placelavadungeon(BlockPos targetPortalPos, ServerLevel targetDimension) throws CommandSyntaxException {
         ResourceLocation structure = new ResourceLocation("mythandmetal", "modstructures/spawnroomdungeon");
         BlockPos placeposition = new BlockPos(targetPortalPos.getX() , targetPortalPos.getY()-1, targetPortalPos.getZ());
+        placehallway(targetPortalPos,targetDimension);
         placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);
     }
 
 
 
 
-
+    private void placehallway(BlockPos targetPortalPos, ServerLevel targetDimension) throws CommandSyntaxException {
+        ResourceLocation structure = new ResourceLocation("mythandmetal", "modstructures/hallwaybedrockdungeon");
+        BlockPos placeposition = new BlockPos(targetPortalPos.getX() , targetPortalPos.getY()-1, targetPortalPos.getZ());
+        placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);
+        ResourceLocation structure2 = new ResourceLocation("mythandmetal", "modstructures/hallwaybrickdungeon");
+        BlockPos placeposition2 = new BlockPos(targetPortalPos.getX() , targetPortalPos.getY()-1, targetPortalPos.getZ());
+        placePortalTemplate(targetDimension, structure2, placeposition2, Rotation.NONE, Mirror.NONE, 1.0F, 0);
+    }
 
 
     private ServerLevel handfromdimension(String bruh, MinecraftServer level) {

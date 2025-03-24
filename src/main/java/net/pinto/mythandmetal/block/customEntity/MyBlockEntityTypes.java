@@ -11,9 +11,9 @@ public class MyBlockEntityTypes {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, "mythandmetal");
 
-    public static final RegistryObject<BlockEntityType<ModLavaDungeonPortalDoorBlockEntity>> LAVA_MOD_PORTAL =
+    public static final RegistryObject<BlockEntityType<ModDungeonPortalDoorBlockEntity>> LAVA_MOD_PORTAL =
             BLOCK_ENTITY_TYPES.register("lava_mod_portal",
-                    () -> BlockEntityType.Builder.of(ModLavaDungeonPortalDoorBlockEntity::new,
+                    () -> BlockEntityType.Builder.of(ModDungeonPortalDoorBlockEntity::new,
                             ModBlocks.LAVA_MOD_PORTAL.get()).build(null));
 
     public static void register(IEventBus eventBus) {

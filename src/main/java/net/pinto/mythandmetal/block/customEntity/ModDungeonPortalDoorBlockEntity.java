@@ -4,11 +4,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ModLavaDungeonPortalDoorBlockEntity extends BlockEntity {
+public class ModDungeonPortalDoorBlockEntity extends BlockEntity {
     private boolean notaccessed = true;
     private int accessnumber=0;
 
-    public ModLavaDungeonPortalDoorBlockEntity(BlockPos pPos, BlockState pBlockState) {
+    public ModDungeonPortalDoorBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(MyBlockEntityTypes.LAVA_MOD_PORTAL.get(), pPos, pBlockState);
     }
 
