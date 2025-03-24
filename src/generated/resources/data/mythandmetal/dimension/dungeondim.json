@@ -6,6 +6,6 @@
       "type": "minecraft:fixed",
       "biome": "mythandmetal:dungeon"
     },
-    "settings": "minecraft:overworld"
+    "settings": "mythandmetal:custom_dungeon_settings"
   }
 }
