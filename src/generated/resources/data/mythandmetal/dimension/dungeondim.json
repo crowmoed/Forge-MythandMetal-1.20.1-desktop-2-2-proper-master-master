@@ -1,11 +1,11 @@
 {
-  "type": "mythandmetal:lavadungeon_type",
+  "type": "mythandmetal:dungeon_type",
   "generator": {
     "type": "minecraft:noise",
     "biome_source": {
       "type": "minecraft:fixed",
       "biome": "mythandmetal:dungeon"
     },
-    "settings": "mythandmetal:custom_dungeon_settings"
+    "settings": "minecraft:overworld"
   }
 }

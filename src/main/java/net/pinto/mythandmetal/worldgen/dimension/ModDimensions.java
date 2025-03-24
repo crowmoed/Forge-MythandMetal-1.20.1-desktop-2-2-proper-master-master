@@ -33,12 +33,12 @@ public class ModDimensions {
             new ResourceLocation(MythandMetal.MOD_ID, "mythandmetal_type"));
 
 
-    public static final ResourceKey<LevelStem> LAVADUNGEON_KEY = ResourceKey.create(Registries.LEVEL_STEM,
-            new ResourceLocation(MythandMetal.MOD_ID, "lavadungeondim"));
-    public static final ResourceKey<Level> LAVADUNGEON_LEVEL_KEY = ResourceKey.create(Registries.DIMENSION,
-            new ResourceLocation(MythandMetal.MOD_ID, "lavadungeondim"));
-    public static final ResourceKey<DimensionType> LAVADUNGEON_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE,
-            new ResourceLocation(MythandMetal.MOD_ID, "lavadungeon_type"));
+    public static final ResourceKey<LevelStem> DUNGEON_KEY = ResourceKey.create(Registries.LEVEL_STEM,
+            new ResourceLocation(MythandMetal.MOD_ID, "dungeondim"));
+    public static final ResourceKey<Level> DUNGEON_LEVEL_KEY = ResourceKey.create(Registries.DIMENSION,
+            new ResourceLocation(MythandMetal.MOD_ID, "dungeondim"));
+    public static final ResourceKey<DimensionType> DUNGEON_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE,
+            new ResourceLocation(MythandMetal.MOD_ID, "dungeon_type"));
 
 
 
@@ -69,7 +69,7 @@ public class ModDimensions {
                 new DimensionType.MonsterSettings(false, false, ConstantInt.of(0), 0)));
 
 
-        context.register(LAVADUNGEON_DIM_TYPE, new DimensionType(
+        context.register(DUNGEON_DIM_TYPE, new DimensionType(
                 OptionalLong.of(12000), // fixedTime
                 false, // hasSkylight
                 false, // hasCeiling
@@ -124,9 +124,9 @@ public class ModDimensions {
                 new FixedBiomeSource(biomeRegistry.getOrThrow(ModBiomes.DUNGEON)),
                 noiseGenSettings.getOrThrow(NoiseGeneratorSettings.OVERWORLD));
 
-        LevelStem lavastem = new LevelStem(dimTypes.getOrThrow(ModDimensions.LAVADUNGEON_DIM_TYPE), lavawrappedChunkGenerator);
+        LevelStem lavastem = new LevelStem(dimTypes.getOrThrow(ModDimensions.DUNGEON_DIM_TYPE), lavawrappedChunkGenerator);
 
-        context.register(LAVADUNGEON_KEY, lavastem);
+        context.register(DUNGEON_KEY, lavastem);
 
 
     }

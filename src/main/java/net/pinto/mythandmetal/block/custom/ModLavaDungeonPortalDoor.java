@@ -93,9 +93,9 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
             MinecraftServer minecraftServer = currentLevel.getServer();
             SavePortalData data = SavePortalData.get(minecraftServer);
 
-            ResourceKey<Level> targetDimensionKey = player.level().dimension() == ModDimensions.LAVADUNGEON_LEVEL_KEY
+            ResourceKey<Level> targetDimensionKey = player.level().dimension() == ModDimensions.DUNGEON_LEVEL_KEY
                     ? Level.OVERWORLD
-                    : ModDimensions.LAVADUNGEON_LEVEL_KEY;
+                    : ModDimensions.DUNGEON_LEVEL_KEY;
 
             ServerLevel targetDimension = minecraftServer.getLevel(targetDimensionKey);
 
@@ -103,7 +103,7 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
                 serverPlayer.changeDimension(targetDimension);
 
                 BlockPos targetPortalPos;
-                if (targetDimensionKey == ModDimensions.LAVADUNGEON_LEVEL_KEY) {
+                if (targetDimensionKey == ModDimensions.DUNGEON_LEVEL_KEY) {
                     if (blockEntity.isNotaccessed()) {
                         blockEntity.setAccessnumber(data.getDungeonlava() );
                         Direction facing = blockEntity.getBlockState().getValue(FACING);
