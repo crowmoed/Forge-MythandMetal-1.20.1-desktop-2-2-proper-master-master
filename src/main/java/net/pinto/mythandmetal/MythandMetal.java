@@ -3,6 +3,7 @@ package net.pinto.mythandmetal;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -30,6 +32,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.pinto.mythandmetal.block.ModBlocks;
+import net.pinto.mythandmetal.block.customEntity.ModDungeonPortalDoorBlockEntity;
 import net.pinto.mythandmetal.block.customEntity.MyBlockEntityTypes;
 import net.pinto.mythandmetal.entity.AshenWolf.AshenWolfRenderer;
 import net.pinto.mythandmetal.entity.CustVillager;
@@ -37,6 +40,7 @@ import net.pinto.mythandmetal.entity.ModEntites;
 import net.pinto.mythandmetal.item.ModCreativeModeTabs;
 import net.pinto.mythandmetal.item.ModItems;
 import net.pinto.mythandmetal.mathproject.GraphCommands;
+import net.pinto.mythandmetal.renderer.DungeonPortalRenderer;
 import net.pinto.mythandmetal.renderer.GlintRenderers;
 import net.pinto.mythandmetal.worldgen.biome.surface.ModSurfaceRules;
 import org.slf4j.Logger;
@@ -120,6 +124,15 @@ public class MythandMetal
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(ModItems.EXPLOSIVESWORD);
         }
+    }
+
+
+
+    @SubscribeEvent
+    public void registerEntityRender(EntityRenderersEvent.RegisterRenderers event)
+    {
+        // Do something when the server starts
+        BlockEntityRenderers.register(MyBlockEntityTypes.LAVA_MOD_PORTAL.get(), DungeonPortalRenderer::new  );
     }
 
 

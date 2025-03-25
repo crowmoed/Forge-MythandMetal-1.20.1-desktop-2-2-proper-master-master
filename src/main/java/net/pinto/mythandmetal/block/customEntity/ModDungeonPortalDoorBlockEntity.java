@@ -1,6 +1,7 @@
 package net.pinto.mythandmetal.block.customEntity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -30,4 +31,9 @@ public class ModDungeonPortalDoorBlockEntity extends BlockEntity {
     public void setAccessnumber(int notaccessed) {
         this.accessnumber = notaccessed;
     }
+
+    public boolean shouldRenderFace(Direction pFace) {
+        return pFace.getAxis() == Direction.Axis.Y;
+    }
+
 }

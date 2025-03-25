@@ -45,28 +45,12 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class ModLavaDungeonPortalDoor extends DirectionalBlock implements EntityBlock {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
-    public static final EnumProperty<DoorHingeSide> SIDE = BlockStateProperties.DOOR_HINGE;
+public class ModLavaDungeonPortalDoor extends ModDungeonPortalDoor {
 
     public ModLavaDungeonPortalDoor(Properties pProperties) {
         super(pProperties);
-        this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(HALF, DoubleBlockHalf.LOWER)
-                .setValue(SIDE, DoorHingeSide.LEFT));
     }
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, HALF, SIDE);
-    }
-
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ModDungeonPortalDoorBlockEntity(pPos, pState);
-    }
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
@@ -84,7 +68,7 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
 
 
 
-    private void handlePortalOverworld(Entity player, BlockPos portalBlockPos2,ModDungeonPortalDoorBlockEntity blockEntity) throws CommandSyntaxException {
+    private void handlePortalOverworld(Entity player, BlockPos portalBlockPos2, ModDungeonPortalDoorBlockEntity blockEntity) throws CommandSyntaxException {
         if (player.level() instanceof ServerLevel currentLevel) {
             ServerPlayer serverPlayer = (ServerPlayer) player;
             MinecraftServer minecraftServer = currentLevel.getServer();
@@ -137,7 +121,7 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
 
 
 
-                        placelavadungeon(targetPortalPos , targetDimension);
+                        placedungeon(targetPortalPos , targetDimension);
 
                         blockEntity.setNotaccessed(false);
 
@@ -169,11 +153,9 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
         }
     }
 
-    private int placementhelper(ModDungeonPortalDoorBlockEntity blockEntity) {
-        return blockEntity.getAccessNumber() % 2 == 0 ? 500 * blockEntity.getAccessNumber() : -500 * blockEntity.getAccessNumber();
-    }
 
-    private void placelavadungeon(BlockPos targetPortalPos, ServerLevel targetDimension) throws CommandSyntaxException {
+
+    private void placedungeon(BlockPos targetPortalPos, ServerLevel targetDimension) throws CommandSyntaxException {
         ResourceLocation structure = new ResourceLocation("mythandmetal", "modstructures/spawnroomdungeon");
         BlockPos placeposition = new BlockPos(targetPortalPos.getX() , targetPortalPos.getY()-1, targetPortalPos.getZ());
         placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);
@@ -195,79 +177,4 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
 
     }
 
-
-
-
-    private ServerLevel handfromdimension(String bruh, MinecraftServer level) {
-        if (bruh.equals("ResourceKey[minecraft:dimension / minecraft:overworld]"))
-            return level.getLevel(Level.OVERWORLD);
-
-        return level.getLevel(ModDimensions.MYTHANDMETAL_LEVEL_KEY);
-    }
-
-
-
-
-    private BlockPos ensureSafePortalLocation(ServerLevel targetDimension, BlockPos portalPos) {
-        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(portalPos.getX(), 255, portalPos.getZ());
-
-        while (mutablePos.getY() >= 0) {
-            if ((targetDimension.getBlockState(mutablePos).getBlock() instanceof Block) && (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.AIR) && (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.VOID_AIR && (targetDimension.getBlockState(mutablePos).getBlock() != Blocks.CAVE_AIR))) {
-
-                BlockPos abovePos = mutablePos.above();
-                if (targetDimension.getBlockState(abovePos).isAir()) {
-                    return abovePos;
-                }
-            }
-            mutablePos.move(0, -1, 0);
-        }
-        mutablePos.move(0, 1, 0);
-
-        return mutablePos;
-    }
-
-    private static final DynamicCommandExceptionType ERROR_TEMPLATE_INVALID = new DynamicCommandExceptionType((p_214582_) -> {
-        return Component.translatable("commands.place.template.invalid", p_214582_);
-    });
-
-    private static final SimpleCommandExceptionType ERROR_TEMPLATE_FAILED = new SimpleCommandExceptionType(Component.translatable("commands.place.template.failed"));
-
-    public static int placePortalTemplate(ServerLevel serverlevel2, ResourceLocation pTemplate, BlockPos pPos, Rotation pRotation, Mirror pMirror, float pIntegrity, int pSeed) throws CommandSyntaxException {
-        ServerLevel serverlevel = serverlevel2;
-        StructureTemplateManager structuretemplatemanager = serverlevel.getStructureManager();
-
-        Optional<StructureTemplate> optional;
-        try {
-            optional = structuretemplatemanager.get(pTemplate);
-        } catch (ResourceLocationException resourcelocationexception) {
-            throw ERROR_TEMPLATE_INVALID.create(pTemplate);
-        }
-
-        if (optional.isEmpty()) {
-            throw ERROR_TEMPLATE_INVALID.create(pTemplate);
-        } else {
-            StructureTemplate structuretemplate = optional.get();
-            checkLoaded(serverlevel, new ChunkPos(pPos), new ChunkPos(pPos.offset(structuretemplate.getSize())));
-            StructurePlaceSettings structureplacesettings = (new StructurePlaceSettings()).setMirror(pMirror).setRotation(pRotation);
-            if (pIntegrity < 1.0F) {
-                structureplacesettings.clearProcessors().addProcessor(new BlockRotProcessor(pIntegrity)).setRandom(StructureBlockEntity.createRandom((long) pSeed));
-            }
-
-            boolean flag = structuretemplate.placeInWorld(serverlevel, pPos, pPos, structureplacesettings, StructureBlockEntity.createRandom((long) pSeed), 2);
-            if (!flag) {
-                throw ERROR_TEMPLATE_FAILED.create();
-            } else {
-                return 1;
-            }
-        }
-    }
-
-    private static void checkLoaded(ServerLevel pLevel, ChunkPos pStart, ChunkPos pEnd) {
-        ChunkPos.rangeClosed(pStart, pEnd).forEach((chunkPos) -> {
-            if (!pLevel.isLoaded(chunkPos.getWorldPosition())) {
-                // Force load the chunk if it's not loaded
-                pLevel.getChunk(chunkPos.x, chunkPos.z);
-            }
-        });
-    }
 }

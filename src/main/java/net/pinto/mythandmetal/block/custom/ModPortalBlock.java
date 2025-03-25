@@ -109,6 +109,10 @@ public class ModPortalBlock extends Block {
     }
 
 
+
+
+
+
     private BlockPos ensureSafePortalLocation(ServerLevel targetDimension, BlockPos portalPos) {
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(portalPos.getX(), 255, portalPos.getZ());
 
