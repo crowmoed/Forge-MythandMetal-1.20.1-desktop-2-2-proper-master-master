@@ -19,23 +19,5 @@ public class DungeonPortalRender2  extends  DungeonPortalRenderer<ModDungeonPort
 
 
 
-    private static final ResourceLocation BEAM_LOCATION = new ResourceLocation("textures/entity/end_gateway_beam.png");
 
-
-
-    protected float getOffsetUp() {
-        return 1.0F;
-    }
-
-    protected float getOffsetDown() {
-        return 0.0F;
-    }
-
-    protected RenderType renderType() {
-        return RenderType.endGateway();
-    }
-
-    public int getViewDistance() {
-        return 256;
-    }
 }
