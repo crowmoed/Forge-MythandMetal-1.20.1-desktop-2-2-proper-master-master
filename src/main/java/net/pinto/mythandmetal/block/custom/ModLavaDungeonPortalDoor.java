@@ -63,10 +63,6 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
         builder.add(FACING, HALF, SIDE);
     }
 
-
-
-
-
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new ModDungeonPortalDoorBlockEntity(pPos, pState);
@@ -85,6 +81,7 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
             return InteractionResult.CONSUME;
         }
     }
+
 
 
     private void handlePortalOverworld(Entity player, BlockPos portalBlockPos2,ModDungeonPortalDoorBlockEntity blockEntity) throws CommandSyntaxException {
@@ -109,18 +106,13 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
                         Direction facing = blockEntity.getBlockState().getValue(FACING);
                         BlockPos portalBlockPos = blockEntity.getBlockPos();
 
-// Calculate all positions to check within a 2-block cube
                         List<BlockPos> allPositions = new ArrayList<>();
 
-// Check 4 vertical layers: below, same, upper, and upper+1
                         for (int yOffset = -1; yOffset <= 2; yOffset++) {
-                            // Check 5x5 grid horizontally for each layer
                             for (int dx = -2; dx <= 2; dx++) {
                                 for (int dz = -2; dz <= 2; dz++) {
-                                    // Skip the portal's own position in its main layer
                                     if (yOffset == 0 && dx == 0 && dz == 0) continue;
 
-                                    // Limit to diamond-shaped area (Manhattan distance <= 2)
                                     if (Math.abs(dx) + Math.abs(dz) > 2) continue;
 
                                     allPositions.add(portalBlockPos.offset(dx, yOffset, dz));
@@ -128,17 +120,11 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
                             }
                         }
 
-// Update all relevant blocks
                         for (BlockPos checkPos : allPositions) {
                             if (currentLevel.getBlockEntity(checkPos) instanceof ModDungeonPortalDoorBlockEntity adjacentEntity) {
                                 adjacentEntity.setAccessnumber(blockEntity.getAccessNumber());
                                 adjacentEntity.setNotaccessed(false);
                             }}
-
-
-
-
-
 
                         data.setDungeonlava(data.getDungeonlava() + 1);
                     }
@@ -199,12 +185,17 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
 
     private void placehallway(BlockPos targetPortalPos, ServerLevel targetDimension) throws CommandSyntaxException {
         ResourceLocation structure = new ResourceLocation("mythandmetal", "modstructures/hallwaybedrockdungeon");
-        BlockPos placeposition = new BlockPos(targetPortalPos.getX() , targetPortalPos.getY()-1, targetPortalPos.getZ());
+        BlockPos placeposition = new BlockPos(targetPortalPos.getX()+3 , targetPortalPos.getY()-1, targetPortalPos.getZ()+15);
         placePortalTemplate(targetDimension, structure, placeposition, Rotation.NONE, Mirror.NONE, 1.0F, 0);
+
         ResourceLocation structure2 = new ResourceLocation("mythandmetal", "modstructures/hallwaybrickdungeon");
-        BlockPos placeposition2 = new BlockPos(targetPortalPos.getX() , targetPortalPos.getY()-1, targetPortalPos.getZ());
+        BlockPos placeposition2 = new BlockPos(targetPortalPos.getX()+4 , targetPortalPos.getY(), targetPortalPos.getZ()+14);
         placePortalTemplate(targetDimension, structure2, placeposition2, Rotation.NONE, Mirror.NONE, 1.0F, 0);
+
+
     }
+
+
 
 
     private ServerLevel handfromdimension(String bruh, MinecraftServer level) {
@@ -213,21 +204,6 @@ public class ModLavaDungeonPortalDoor extends DirectionalBlock implements Entity
 
         return level.getLevel(ModDimensions.MYTHANDMETAL_LEVEL_KEY);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
