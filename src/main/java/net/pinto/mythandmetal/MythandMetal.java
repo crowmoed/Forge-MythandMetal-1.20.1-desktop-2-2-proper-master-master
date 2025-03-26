@@ -140,8 +140,7 @@ public class MythandMetal
                 BlockEntityRenderersAccessor.getProviders();
         providers.put(
                 MyBlockEntityTypes.LAVA_MOD_PORTAL.get(),
-                (BlockEntityRendererProvider<ModDungeonPortalDoorBlockEntity>) DungeonPortalRenderer::new
-        );
+                (BlockEntityRendererProvider<ModDungeonPortalDoorBlockEntity>) DungeonPortalRenderer::new);
     }
 
 
