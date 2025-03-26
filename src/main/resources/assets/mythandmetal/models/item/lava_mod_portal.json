@@ -2,6 +2,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "mythandmetal:block/lava_dungeon_portal_door"
+    "all": "minecraft:block/obsidian"
   }
 }

@@ -3,6 +3,7 @@ package net.pinto.mythandmetal;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.registries.Registries;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,11 +42,14 @@ import net.pinto.mythandmetal.entity.ModEntites;
 import net.pinto.mythandmetal.item.ModCreativeModeTabs;
 import net.pinto.mythandmetal.item.ModItems;
 import net.pinto.mythandmetal.mathproject.GraphCommands;
+import net.pinto.mythandmetal.mixin.BlockEntityRenderersAccessor;
 import net.pinto.mythandmetal.renderer.DungeonPortalRenderer;
 import net.pinto.mythandmetal.renderer.GlintRenderers;
 import net.pinto.mythandmetal.worldgen.biome.surface.ModSurfaceRules;
 import org.slf4j.Logger;
 import terrablender.api.SurfaceRuleManager;
+
+import java.util.Map;
 
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -131,8 +136,12 @@ public class MythandMetal
     @SubscribeEvent
     public void registerEntityRender(EntityRenderersEvent.RegisterRenderers event)
     {
-        // Do something when the server starts
-        BlockEntityRenderers.register(MyBlockEntityTypes.LAVA_MOD_PORTAL.get(), DungeonPortalRenderer::new  );
+        Map<BlockEntityType<?>, BlockEntityRendererProvider<?>> providers =
+                BlockEntityRenderersAccessor.getProviders();
+        providers.put(
+                MyBlockEntityTypes.LAVA_MOD_PORTAL.get(),
+                (BlockEntityRendererProvider<ModDungeonPortalDoorBlockEntity>) DungeonPortalRenderer::new
+        );
     }
 
 
