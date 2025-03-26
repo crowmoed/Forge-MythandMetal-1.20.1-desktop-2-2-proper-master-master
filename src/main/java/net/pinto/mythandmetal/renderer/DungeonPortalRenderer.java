@@ -8,8 +8,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
-import net.minecraft.world.level.block.entity.TheEndPortalBlockEntity;
 import net.pinto.mythandmetal.block.customEntity.ModDungeonPortalDoorBlockEntity;
 import org.joml.Matrix4f;
 

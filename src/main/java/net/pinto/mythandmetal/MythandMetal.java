@@ -2,8 +2,6 @@ package net.pinto.mythandmetal;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.registries.Registries;
@@ -13,11 +11,9 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -34,7 +30,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.pinto.mythandmetal.block.ModBlocks;
-import net.pinto.mythandmetal.block.customEntity.ModDungeonPortalDoorBlockEntity;
 import net.pinto.mythandmetal.block.customEntity.MyBlockEntityTypes;
 import net.pinto.mythandmetal.entity.AshenWolf.AshenWolfRenderer;
 import net.pinto.mythandmetal.entity.CustVillager;
@@ -42,15 +37,11 @@ import net.pinto.mythandmetal.entity.ModEntites;
 import net.pinto.mythandmetal.item.ModCreativeModeTabs;
 import net.pinto.mythandmetal.item.ModItems;
 import net.pinto.mythandmetal.mathproject.GraphCommands;
-
 import net.pinto.mythandmetal.renderer.DungeonPortalRenderer;
 import net.pinto.mythandmetal.renderer.GlintRenderers;
-
 import net.pinto.mythandmetal.worldgen.biome.surface.ModSurfaceRules;
 import org.slf4j.Logger;
 import terrablender.api.SurfaceRuleManager;
-
-import java.util.Map;
 
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -121,11 +112,11 @@ public class MythandMetal
 
 
     }
-    public static ShaderInstance STATIC_GLINT_SHADER;
 
 
 
-    // Add the example block item to the building blocks tab
+
+
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
