@@ -42,9 +42,10 @@ import net.pinto.mythandmetal.entity.ModEntites;
 import net.pinto.mythandmetal.item.ModCreativeModeTabs;
 import net.pinto.mythandmetal.item.ModItems;
 import net.pinto.mythandmetal.mathproject.GraphCommands;
-import net.pinto.mythandmetal.mixin.BlockEntityRenderersAccessor;
+
 import net.pinto.mythandmetal.renderer.DungeonPortalRenderer;
 import net.pinto.mythandmetal.renderer.GlintRenderers;
+
 import net.pinto.mythandmetal.worldgen.biome.surface.ModSurfaceRules;
 import org.slf4j.Logger;
 import terrablender.api.SurfaceRuleManager;
@@ -113,8 +114,9 @@ public class MythandMetal
     private void commonSetup(final FMLCommonSetupEvent event)
     {
 
+        BlockEntityRenderers.register(MyBlockEntityTypes.LAVA_MOD_PORTAL.get(), DungeonPortalRenderer::new);
 
-            SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, MOD_ID, ModSurfaceRules.makeRules());
+        SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, MOD_ID, ModSurfaceRules.makeRules());
         Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
 
 
@@ -133,15 +135,7 @@ public class MythandMetal
 
 
 
-    @SubscribeEvent
-    public void registerEntityRender(EntityRenderersEvent.RegisterRenderers event)
-    {
-        Map<BlockEntityType<?>, BlockEntityRendererProvider<?>> providers =
-                BlockEntityRenderersAccessor.getProviders();
-        providers.put(
-                MyBlockEntityTypes.LAVA_MOD_PORTAL.get(),
-                (BlockEntityRendererProvider<ModDungeonPortalDoorBlockEntity>) DungeonPortalRenderer::new);
-    }
+
 
 
 

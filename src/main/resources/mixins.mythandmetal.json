@@ -8,8 +8,7 @@
     "ItemStackMixin",
     "PlayerMixin",
     "renderBufferInterface",
-    "RenderBuffersMixin",
-    "BlockEntityRenderersAccessor"
+    "RenderBuffersMixin"
   ],
   "client":[
 ],

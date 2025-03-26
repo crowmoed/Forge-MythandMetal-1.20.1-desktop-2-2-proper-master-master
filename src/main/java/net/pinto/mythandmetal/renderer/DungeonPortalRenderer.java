@@ -14,7 +14,7 @@ import net.pinto.mythandmetal.block.customEntity.ModDungeonPortalDoorBlockEntity
 import org.joml.Matrix4f;
 
 public class DungeonPortalRenderer <T extends ModDungeonPortalDoorBlockEntity> implements BlockEntityRenderer<T> {
-    public DungeonPortalRenderer(BlockEntityRendererProvider.Context context) {
+    public DungeonPortalRenderer(BlockEntityRendererProvider.Context context) {super();
     }
 
     public static final ResourceLocation END_SKY_LOCATION = new ResourceLocation("textures/environment/end_sky.png");
@@ -39,25 +39,29 @@ public class DungeonPortalRenderer <T extends ModDungeonPortalDoorBlockEntity> i
     }
 
     private void renderFace(T pBlockEntity, Matrix4f pPose, VertexConsumer pConsumer, float pX0, float pX1, float pY0, float pY1, float pZ0, float pZ1, float pZ2, float pZ3, Direction pDirection) {
-        if (pBlockEntity.shouldRenderFace(pDirection)) {
+
             pConsumer.vertex(pPose, pX0, pY0, pZ0).endVertex();
             pConsumer.vertex(pPose, pX1, pY0, pZ1).endVertex();
             pConsumer.vertex(pPose, pX1, pY1, pZ2).endVertex();
             pConsumer.vertex(pPose, pX0, pY1, pZ3).endVertex();
-        }
+
 
     }
 
     protected float getOffsetUp() {
-        return 0.75F;
+        return 1.0F;
     }
 
     protected float getOffsetDown() {
-        return 0.375F;
+        return 0.0F;
     }
 
     protected RenderType renderType() {
-        return RenderType.endPortal();
+        return RenderType.endGateway();
+    }
+
+    public int getViewDistance() {
+        return 256;
     }
 
 

@@ -51,6 +51,11 @@ public class ModLavaDungeonPortalDoor extends ModDungeonPortalDoor {
         super(pProperties);
     }
 
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new ModDungeonPortalDoorBlockEntity(pPos, pState);
+    }
+
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
