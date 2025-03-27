@@ -32,7 +32,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.pinto.mythandmetal.block.ModBlocks;
 import net.pinto.mythandmetal.block.customEntity.MyBlockEntityTypes;
-import net.pinto.mythandmetal.effects.ModParticleTypes;
+
 import net.pinto.mythandmetal.entity.AshenWolf.AshenWolfRenderer;
 import net.pinto.mythandmetal.entity.CustVillager;
 import net.pinto.mythandmetal.entity.ModEntites;
@@ -79,7 +79,6 @@ public class MythandMetal
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         CustVillager.register(modEventBus);
-        ModParticleTypes.registerParticleFactories(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
         ModItems.register(modEventBus);
         ModEntites.register(modEventBus);
