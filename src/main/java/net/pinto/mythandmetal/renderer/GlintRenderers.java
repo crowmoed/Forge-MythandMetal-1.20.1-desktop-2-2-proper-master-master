@@ -6,12 +6,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
 
 public class GlintRenderers extends RenderType {
+
+    public static final ResourceLocation DUNGEON_LIGHT = new ResourceLocation("mythandmetal:textures/misc/enchanted_glint_item4.png");
 
 
     public static final ResourceLocation ARMTIERSEVEN_LOCATION = new ResourceLocation("mythandmetal:textures/misc/tierseven_glint_enchanted.png");
@@ -218,6 +221,13 @@ public class GlintRenderers extends RenderType {
 
     private static final RenderType GLINT_DIRECTENCHANTMENT4 = create("glint_direct4", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256,false,false, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_GLINT_DIRECT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, true, false)).setWriteMaskState(COLOR_WRITE).setCullState(NO_CULL).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(GLINT_TRANSPARENCY).setTexturingState(GLINT_TEXTURING).setTextureState(new RenderStateShard.TextureStateShard(ENCH4_LOCATION, true, false)).createCompositeState(false));
     private static final RenderType GLINT_DIRECTENCHANTMENT4_DIRECT = create("entity_glint_direct4", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256,false,false, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ENTITY, true, false)).setWriteMaskState(COLOR_WRITE).setCullState(NO_CULL).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(GLINT_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).setTextureState(new RenderStateShard.TextureStateShard(ENCH4_LOCATION, true, false)).createCompositeState(false));
+
+    private static final RenderType DUNGEON_LIGHT_PORTAL = create("dungeon_light_portal", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_END_PORTAL_SHADER).setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(TheEndPortalRenderer.END_SKY_LOCATION, false, false).add(TheEndPortalRenderer.END_PORTAL_LOCATION, false, false).build()).createCompositeState(false));
+
+    public static RenderType getDungeonLightPortal() {
+        return DUNGEON_LIGHT_PORTAL;
+    }
+
 
     public static RenderType getglint_direct4() {return GLINT_DIRECTENCHANTMENT4;}
     public static RenderType getentity_glint_direct4() {return GLINT_DIRECTENCHANTMENT4_DIRECT;}

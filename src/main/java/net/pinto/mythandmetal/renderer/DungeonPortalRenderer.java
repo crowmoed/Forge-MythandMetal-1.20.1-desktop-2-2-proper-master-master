@@ -55,7 +55,7 @@ public class DungeonPortalRenderer <T extends ModDungeonPortalDoorBlockEntity> i
     }
 
     protected RenderType renderType() {
-        return RenderType.endGateway();
+        return GlintRenderers.getDungeonLightPortal();
     }
 
     public int getViewDistance() {

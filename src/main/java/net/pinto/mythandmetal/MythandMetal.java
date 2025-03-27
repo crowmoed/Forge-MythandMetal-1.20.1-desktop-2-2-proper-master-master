@@ -90,6 +90,7 @@ public class MythandMetal
         modEventBus.addListener(this::commonSetup);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
+
     }
 
 
@@ -100,8 +101,6 @@ public class MythandMetal
         GraphCommands.register(event.getDispatcher());
     }
 
-
-
     private void commonSetup(final FMLCommonSetupEvent event)
     {
 
@@ -110,12 +109,7 @@ public class MythandMetal
         SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, MOD_ID, ModSurfaceRules.makeRules());
         Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
 
-
     }
-
-
-
-
 
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
